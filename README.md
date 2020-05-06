@@ -7,7 +7,7 @@ Build and install libnginx.
 git clone https://github.com/hnakamur/nginx
 cd nginx
 git checkout libnginx
-./auto/configure --prefix=/usr/local --libnginx
+./auto/configure --with-debug --prefix=/usr/local --libnginx
 make
 sudo make install
 ```
