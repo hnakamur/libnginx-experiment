@@ -36,7 +36,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "malloc failed\n");
         return 1;
     }
-    if (ngx_slab_init_size(sp, pool_size) != NGX_OK) {
+    if (libnginx_slab_init_size(sp, pool_size) != NGX_OK) {
         fprintf(stderr, "ngx_slab_init_size failed\n");
         return NGX_ERROR;
     }
