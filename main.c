@@ -2,8 +2,12 @@
 
 int main(int argc, char **argv)
 {
-    ngx_log_t *log;
-    int ret = libnginx_init(&log, "debug.log", NGX_LOG_DEBUG, 0);
+    int ret = libnginx_init("debug.log", NGX_LOG_DEBUG, 0);
+    if (ret != NGX_OK) {
+        fprintf(stderr, "libnginx initialize failed\n");
+        return 1;
+    }
+    ngx_log_t *log = ngx_cycle->log;
 
     ngx_log_error(NGX_LOG_ERR, log, 0, "hello nginx log %d", 1);
     ngx_log_error(NGX_LOG_ERR, log, 2, "some error %s", "badarg");
