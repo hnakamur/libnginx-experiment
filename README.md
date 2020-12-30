@@ -22,6 +22,5 @@ make
 ```
 
 ```console
-mkdir logs
 ./main
 ```

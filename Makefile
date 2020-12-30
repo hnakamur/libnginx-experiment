@@ -1,4 +1,4 @@
-CFLAGS ?= -g -O2 -I/usr/local/include/nginx
+CFLAGS ?= -g -O0 -I/usr/local/include
 XCFLAGS =
 override CFLAGS += -Wall -D_GNU_SOURCE
 
