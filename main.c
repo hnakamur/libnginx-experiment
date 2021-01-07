@@ -10,12 +10,11 @@ int main(int argc, char **argv)
     void                *p, *aligned_p, *end_p, *aligned_end;
     ngx_shm_t            shm;
 
-    ret = libnginx_init(".", "debug.log", NGX_LOG_DEBUG, 0);
+    ret = libnginx_init(".", "debug.log", NGX_LOG_DEBUG, 0, &cycle);
     if (ret != NGX_OK) {
         fprintf(stderr, "libnginx initialize failed\n");
         return 1;
     }
-    cycle = (ngx_cycle_t *) ngx_cycle;
 
     ngx_log_error(NGX_LOG_ERR, cycle->log, 0, "hello nginx log %d", 1);
     ngx_log_error(NGX_LOG_ERR, cycle->log, 2, "some error %s", "badarg");
