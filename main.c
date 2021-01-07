@@ -7,7 +7,7 @@ int main(int argc, char **argv)
     ngx_pool_t          *pool;
     void                *data;
     ngx_slab_pool_t     *sp;
-    void                *p;
+    void                *p, *aligned_p, *end_p, *aligned_end;
     ngx_shm_t            shm;
 
     ret = libnginx_init(".", "debug.log", NGX_LOG_DEBUG, 0);
@@ -41,7 +41,7 @@ int main(int argc, char **argv)
      * slab pool usage example
      * ============================== */
     memset(&shm, 0, sizeof(shm));
-    shm.size = 1024 * 1024;; /* 1MiB */
+    shm.size = 4ULL * 1024 * 1024 * 1024 + 2 * 4096; /* 4GiB + 8KiB */
     ngx_str_set(&shm.name, "libnginx_shared_zone");
     shm.log = cycle->log;
 
@@ -54,8 +54,12 @@ int main(int argc, char **argv)
         return NGX_ERROR;
     }
     sp = (ngx_slab_pool_t *) shm.addr;
-    p = ngx_slab_calloc(sp, 20);
-    ngx_log_debug1(NGX_LOG_DEBUG, cycle->log, 0, "slab_alloc p=%p", p);
+    p = ngx_slab_calloc(sp, 4 * 1024 * 1024 * 1024 + 4096);
+    end_p = (char *)p + 4 * 1024 * 1024 * 1024 + 4096;
+    aligned_p = ngx_align_ptr(p, 4096);
+    aligned_end = (char *)aligned_p + 4 * 1024 * 1024 * 1024;
+
+    ngx_log_debug6(NGX_LOG_DEBUG, cycle->log, 0, "slab_alloc p=%p, aligned_ptr=%p, aligned=%d, end_p=%p, aligned_end=%p, end_ok=%d", p, aligned_p, p == aligned_p, end_p, aligned_end, aligned_end <= end_p);
     ngx_slab_free(sp, p);
     ngx_shm_free(&shm);
 
